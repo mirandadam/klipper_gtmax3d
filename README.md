@@ -13,8 +13,38 @@ O suporte deles me apoiou com informações para fazer este upgrade e me respond
 
 ## Funcionalidade
 
+A instalação do firmware Klipper é o upgrade que mais vale a pena, e pode ser feito sem abrir a impressora e sem trocar componentes.
+
+O arquivo [printer.cfg](printer.cfg) neste repositório contém as informações necessárias, inclusive os pinos para detecção de filamento, sensores de fim de curso ("endstops"), configuração de geometria da impressora, modelo de LCD, etc. A direção dos motores configuradas nele respeita a direção original de fábrica. Se você trocar os controladores para os TMC2209, ou você precisa trocar a direção dos motores no printer.cfg (inclusive do extrusor) ou precisa trocar um par de fios de cada controlador. Ainda não fiz as macros de troca de filamento quando o filamento acaba no meio da impressão.
+
+* Peça para a GTMax3D uma cópia do firmware original da impressora no formato ".hex" ANTES de você tentar qualquer coisa. Isso vai ser necessário se houver algum problema para carregar o firmware.
+* Instale o [FluiddPi](https://docs.fluidd.xyz/installation/fluiddpi) em um minicomputador Raspberry PI 2B ou superior e faça as configurações como no tutorial do site.
+* Instale um controlador wifi se o seu raspberry pi não tiver um embutido (no meu caso eu já tinha um Raspberry PI 2B antigo).
+* Conecte raspberry pi pelo cabo USB à sua impressora.
+* Acesse o Fluidd pela interface de rede e coloque o arquivo [printer.cfg](printer.cfg) neste repositório lá.
+* Não lembro se o Fluidd faz essa etapa sozinho, mas eu fiz manualmente o procedimento de [instalação do Klipper](https://www.klipper3d.org/Installation.html) para carregar o firmware na impressora.
+* Faça os procedimentos em [Klipper Initial Setup : Making sure things are all good before printing](https://www.youtube.com/watch?v=T-knWbh1Gg8) para testar o movimento da impressora. Tudo já deve estar ok se você não trocou nenhum componente na impressora (ou se trocou e inverteu corretamente a direção dos motores), mas é importante conferir.
+* Calibre a sua impressora. Normalmente só o "rotation_distance" já vai ser suficiente para você começar a imprimir, e o seu valor não deve ser muito diferente do que eu achei para a minha impressora.
+* ***Atenção: NÃO CONFIGURE O max_power DA SESSÃO heater_bed PARA UM VALOR MAIOR QUE 0.2*** O arquivo printer.cfg já está com o valor correto, mexa por sua conta e risco! Eu comecei a configuração com 1.0 e a temperatura da mesa subiu super rápido. Tive sorte de não queimar a resistência nem quebrar o vidro. Esse é um componente que tem que esquentar devagar, para dar tempo do calor se espalhar e minimizar deformações.
+
+
 Vantagens:
-* 
+* Melhor qualidade de impressão ou maior velocidade por causa do melhor controle de temperatura e funcionalidades como avanço de pressão e "input shaping", para eliminar ondulações.
+* Controlar a impressora pela rede.
+* Configurar macros para facilitar algumas tarefas como carga e descarga de filamento, calibração de temperatura da mesa e do bico quando trocar o material, etc.
+* Acompanhamento da impressão com estimativa realista de tempo para término.
+* Alterar parâmetros de impressão enquanto ela acontece (velocidade, temperatura, extrusão, etc.).
+* Mandar trabalhos para a impressora sem precisar de cartão de memória.
+* Suporte para comandos G2 e G3 (Cura ArcWelder), que diminuem o tamanho do arquivo .gcode e fazem as curvas nos objetos ficarem mais suaves com menos "degraus". O firmware original suporta esses comandos mas a impressora fica super lenta na hora de executá-los.
+* Se você não fizer nenhuma troca de componentes da impressora (upgrades abaixo), é possível voltar a impressora para a configuração de fábrica original.
+* Tem bastante material no youtube ensinando a mexer com o Klipper.
+
+Desvantagens:
+* Exige conhecimentos básicos de informática para instalar o fluidpi em um minicomputador raspberry pi.
+* A maioria da documentação está em inglês.
+* Se você fizer alguma confusão com a troca de direção dos motores, a sua impressora pode tentar forçar um motor para além do fim de curso dele, podendo provocar todo tipo de problemas mecânicos. Teste com cuidado, com o dedo no interruptor liga/desliga, para poder interromper a energia instantaneamente se alguma coisa der errado.
+* É bom dar uma olhada nos vídeos no youtube ensinando a instalar o klipper pela primeira vez.
+* O cabo usb tem que ficar ligado o tempo todo e você tem que arrumar um lugar para colocar o raspberry pi que controla a impressora.
 
 
 ## Ruído
@@ -29,13 +59,15 @@ Vantagens:
 * Se trocar a ventoinha, melhora mais ainda. Dá até para trabalhar no mesmo ambiente em que a impressora está imprimindo.
 
 Desvantagens:
-* É necessário abrir a impressora, trocar componentes e mexer em alguns fios.
+* É necessário abrir a impressora, trocar componentes e mexer em alguns fios. Se você fizer este upgrade junto com a instalação do Klipper, a direção pode ser invertida no arquivo printer.cfg, sem a necessidade de trocar fios.
 * O espaço é um pouco apertado e você tem oportunidade de queimar componentes se ligar alguma coisa no lugar errado ou colocar um controlador de cabeça para baixo.
 * Risco de choque elétrico. DESLIGUE DA TOMADA antes de mexer.
 
 
 ## Eletrônica
 
-Comprei o kit para fazer o upgrade da placa interna (uma RAMPS 1.4 com arduíno) para uma BigTreeTech Octopus mas acabei não fazendo. Não vale a pena. Consegui fazer tudo com os componentes originais da impressora.
+Comprei o kit para fazer o upgrade da placa interna (uma RAMPS 1.4 com arduíno) para uma BigTreeTech Octopus mas acabei não fazendo. Não vale a pena. Consegui fazer tudo com os componentes originais da impressora. Vou guardar a minha Octopus para um outro projeto.
+
+Se você não quiser usar o RaspberryPi, esse upgrade pode permitir que você use uma versão do Marlin 2.0 mais recente que suporte avanço de pressão. Na minha opinião dá muito mais trabalho e não deve ficar tão bom como usar o Klipper.
 
 
