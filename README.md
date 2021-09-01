@@ -45,6 +45,7 @@ Desvantagens:
 * Se você fizer alguma confusão com a troca de direção dos motores, a sua impressora pode tentar forçar um motor para além do fim de curso dele, podendo provocar todo tipo de problemas mecânicos. Teste com cuidado, com o dedo no interruptor liga/desliga, para poder interromper a energia instantaneamente se alguma coisa der errado.
 * É bom dar uma olhada nos vídeos no youtube ensinando a instalar o klipper pela primeira vez.
 * O cabo usb tem que ficar ligado o tempo todo e você tem que arrumar um lugar para colocar o raspberry pi que controla a impressora.
+* Vários comandos de gcode, como o M300 que gera um bipe, param de funcionar pois não são suportados diretamente no Klipper. Você pode reimplementá-los como macros no arquivo printer.cfg, como o g29 que eu escrevi para nivelar a mesa tendo em vista as características da sonda.
 
 
 ## Ruído
@@ -55,7 +56,7 @@ Esse upgrade é caro mas vale muito a pena. A impressora fica muito mais silenci
 * Secundário: trocar a ventoinha da parte da frente por uma Noctua NF-A4x20 PWM 5V. Custo: ~R$130. Não acho que vale a pena comprar no exterior.
 
 Vantagens:
-* Não dá nem para perceber quando a impressora está imprimindo, de tão silenciosa que fica. A ventoinha externa ainda faz bastante barulho mas não incomoda tanto quanto os motores.
+* Mal dá para perceber se a impressora está imprimindo ou parada. A ventoinha externa ainda faz bastante barulho mas não incomoda tanto quanto os motores.
 * Se trocar a ventoinha, melhora mais ainda. Dá até para trabalhar no mesmo ambiente em que a impressora está imprimindo.
 
 Desvantagens:
