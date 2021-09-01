@@ -21,7 +21,7 @@ O arquivo [printer.cfg](printer.cfg) neste repositório contém as informações
 * Instale o [FluiddPi](https://docs.fluidd.xyz/installation/fluiddpi) em um minicomputador Raspberry PI 2B ou superior e faça as configurações como no tutorial do site.
 * Instale um controlador wifi se o seu raspberry pi não tiver um embutido (no meu caso eu já tinha um Raspberry PI 2B antigo).
 * Conecte raspberry pi pelo cabo USB à sua impressora.
-* Acesse o Fluidd pela interface de rede e coloque o arquivo [printer.cfg](printer.cfg) neste repositório lá.
+* Acesse o Fluidd pela interface de rede (http://fluiddpi.local se você não mudou) e coloque o arquivo [printer.cfg](printer.cfg) na pasta de configuração.
 * Não lembro se o Fluidd faz essa etapa sozinho, mas eu fiz manualmente o procedimento de [instalação do Klipper](https://www.klipper3d.org/Installation.html) para carregar o firmware na impressora.
 * Faça os procedimentos em [Klipper Initial Setup : Making sure things are all good before printing](https://www.youtube.com/watch?v=T-knWbh1Gg8) para testar o movimento da impressora. Tudo já deve estar ok se você não trocou nenhum componente na impressora (ou se trocou e inverteu corretamente a direção dos motores), mas é importante conferir.
 * Calibre a sua impressora. Normalmente só o "rotation_distance" já vai ser suficiente para você começar a imprimir, e o seu valor não deve ser muito diferente do que eu achei para a minha impressora.
