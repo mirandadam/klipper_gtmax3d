@@ -6,6 +6,8 @@ Notas pessoais para instalação do firmware [Klipper](https://www.klipper3d.org
 
 O suporte deles me apoiou com informações para fazer este upgrade e me respondeu super rápido sempre que precisei. 
 
+O @zenaro147 enviou uma configuração exemplo para a Core A1V1 em 2023-01-03.
+
 ***Se você tiver alguma dúvida ou estiver faltando alguma informação importante, por favor abra um "issue" neste repositório.***
 
 
@@ -15,9 +17,11 @@ O suporte deles me apoiou com informações para fazer este upgrade e me respond
 
 A instalação do firmware Klipper é o upgrade que mais vale a pena, e pode ser feito sem abrir a impressora e sem trocar componentes.
 
-O arquivo [printer.cfg](printer.cfg) neste repositório contém as informações necessárias, inclusive os pinos para detecção de filamento, sensores de fim de curso ("endstops"), configuração de geometria da impressora, modelo de LCD, etc. A direção dos motores configuradas nele respeita a direção original de fábrica. Se você trocar os controladores para os TMC2209, ou você precisa trocar a direção dos motores no printer.cfg (inclusive do extrusor) ou precisa trocar um par de fios de cada controlador. Ainda não fiz as macros de troca de filamento quando o filamento acaba no meio da impressão.
+O arquivo [printer-gtmax3d-core-a2v2.cfg](printer-gtmax3d-core-a2v2.cfg) neste repositório contém as informações necessárias, inclusive os pinos para detecção de filamento, sensores de fim de curso ("endstops"), configuração de geometria da impressora, modelo de LCD, etc. A direção dos motores configuradas nele respeita a direção original de fábrica. Se você trocar os controladores para os TMC2209, ou você precisa trocar a direção dos motores no printer.cfg (inclusive do extrusor) ou precisa trocar um par de fios de cada controlador. Ainda não fiz as macros de troca de filamento quando o filamento acaba no meio da impressão.
 
-* Peça para a GTMax3D uma cópia do firmware original da impressora no formato ".hex" ANTES de você tentar qualquer coisa. Isso vai ser necessário se houver algum problema para carregar o firmware.
+Existe uma versão do arquivo feito pelo @zenaro147 para a Core A1V1 - verifique a versão correta para a sua impressora, revise o que for necessário e copie o conteúdo para o arquivo printer.cfg do seu raspberry pi.
+
+* Peça para a GTMax3D uma cópia do firmware original da impressora no formato ".hex" ANTES de você tentar mexer em qualquer coisa. Esse arquivo vai ser necessário se houver algum problema para carregar o firmware.
 * Instale o [FluiddPi](https://docs.fluidd.xyz/installation/fluiddpi) em um minicomputador Raspberry PI 2B ou superior e faça as configurações como no tutorial do site.
 * Instale um controlador wifi se o seu raspberry pi não tiver um embutido (no meu caso eu já tinha um Raspberry PI 2B antigo).
 * Conecte raspberry pi pelo cabo USB à sua impressora.
@@ -67,8 +71,6 @@ Desvantagens:
 
 ## Eletrônica
 
-Comprei o kit para fazer o upgrade da placa interna (uma RAMPS 1.4 com arduíno) para uma BigTreeTech Octopus mas acabei não fazendo. Não vale a pena. Consegui fazer tudo com os componentes originais da impressora. Vou guardar a minha Octopus para um outro projeto.
+Comprei o kit para fazer o upgrade da placa interna (uma RAMPS 1.4 com arduíno) para uma BigTreeTech Octopus mas acabei não fazendo a troca. Daria muito trabalho e avaliei que não vale a pena, pois, no meu caso, a única vantagem seria que a placa seria um pouco mais rápida, o que ajudaria em caso de projetos que exigissem impressão veloz com um gcode muito grande. Consegui fazer tudo com os componentes originais da impressora. Vou guardar a minha Octopus para um outro projeto.
 
-Se você não quiser usar o RaspberryPi, esse upgrade pode permitir que você use uma versão do Marlin 2.0 mais recente que suporte avanço de pressão. Na minha opinião dá muito mais trabalho e não deve ficar tão bom como usar o Klipper.
-
-
+Se você não quiser usar o RaspberryPi com o Klipper, trocar a placa interna por uma Octopus ou outra placa mais potente pode permitir que você use uma versão do Marlin 2.0 mais recente que suporte avanço de pressão. Na minha opinião dá muito mais trabalho e não deve ficar tão bom como usar o Klipper.
