@@ -137,6 +137,7 @@ trusted_clients:
   169.254.0.0/16
   172.16.0.0/12
   192.168.0.0/16
+  FC00::/7
   FE80::/10
   ::1/128
 
@@ -157,11 +158,14 @@ path: ~/fluidd
 
 Depois de salvar, reinicie o Moonraker: `sudo systemctl restart moonraker`.
 
-`trusted_clients` libera o acesso sem senha para a rede local. Para exigir login, acrescente
-`force_logins: True` à seção `[authorization]` e crie um usuário pelo Fluidd. A partir daí a rede local
-também precisa de login, inclusive o próprio Pi: o envio pelo PrusaSlicer e os comandos `curl` desta
-documentação passam a precisar da chave de API do Moonraker (nos `curl`, no cabeçalho `X-Api-Key`). O
-comando `~/moonraker/scripts/fetch-apikey.sh` mostra a chave.
+`trusted_clients` libera o acesso sem senha para a rede local, em IPv4 e em IPv6. A linha `FC00::/7` cobre
+os endereços IPv6 locais que muitos roteadores distribuem (`fd00::…`): sem ela, quem entra pelo IPv6 cai numa
+tela de login, mesmo sem nenhum usuário cadastrado.
+
+Para exigir login, acrescente `force_logins: True` à seção `[authorization]` e crie um usuário pelo Fluidd. A
+partir daí a rede local também precisa de login, inclusive o próprio Pi: o envio pelo PrusaSlicer e os
+comandos `curl` desta documentação passam a precisar da chave de API do Moonraker (nos `curl`, no cabeçalho
+`X-Api-Key`). O comando `~/moonraker/scripts/fetch-apikey.sh` mostra a chave.
 
 ## 5. Fluidd e nginx
 
