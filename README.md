@@ -1,76 +1,112 @@
 # klipper_gtmax3d
 
-Notas pessoais para instalação do firmware [Klipper](https://www.klipper3d.org/) e outros upgrades para a impressora Core A2V2 da GTMax3D.
+Configuração e documentação para usar o firmware [Klipper](https://www.klipper3d.org/) em impressoras 3D
+GTMax3D da linha Core, com a placa original (RAMPS 1.4 + Arduino Mega 2560) e um Raspberry Pi.
 
-*Não tenho qualquer relação comercial, patrocínio, vínculo, etc. com a empresa GTMax3D, exceto pelo fato de ter comprado uma impressora Core A2V2 no início de 2021. A empresa não divulga código fonte do firmware nem documentação específica para fazer esse tipo de alteração. Se você não quer perder a garantia, faz uso profissional da sua impressora ou não pode arriscar que ela fique sem condições de operação por algum tempo, não tente estas modificações.*
+O foco é a **Core A2V2** do autor, uma impressora comprada em 2021 e modificada: drivers TMC2209, Klipper com
+Raspberry Pi, acelerômetro ADXL345 e bico de 0,6 mm. O repositório serve de referência para quem tem esse
+hardware e de registro da configuração do próprio autor.
 
-O suporte deles me apoiou com informações para fazer este upgrade e me respondeu super rápido sempre que precisei. 
+*O autor não tem relação comercial, patrocínio ou vínculo com a GTMax3D, além de ter comprado uma impressora.
+A empresa não divulga o código do firmware original nem documentação para este tipo de modificação. Se você
+não quer perder a garantia, usa a impressora profissionalmente ou não pode ficar um tempo sem ela, não faça
+estas modificações.*
 
-O @zenaro147 enviou uma configuração exemplo para a Core A1V1 em 2023-01-03.
+O suporte da GTMax3D ajudou com informações para este upgrade e sempre respondeu rápido.
 
-***Se você tiver alguma dúvida ou estiver faltando alguma informação importante, por favor abra um "issue" neste repositório.***
+***Se tiver dúvidas ou faltar alguma informação importante, abra uma
+[issue](https://github.com/mirandadam/klipper_gtmax3d/issues).***
 
+## Arquivos de configuração
 
-# Modalidade de upgrade
+| Arquivo | Impressora | Autor |
+|---|---|---|
+| [`printer-gtmax3d-core-a2v2-bico0.4.cfg`](printer-gtmax3d-core-a2v2-bico0.4.cfg) | Core A2V2 com o bico original, de 0,4 mm | @mirandadam |
+| [`printer-gtmax3d-core-a2v2-bico0.6.cfg`](printer-gtmax3d-core-a2v2-bico0.6.cfg) | Core A2V2 com bico de 0,6 mm (em uso pelo autor) | @mirandadam |
+| [`printer-gtmax3d-core-a1v1.cfg`](printer-gtmax3d-core-a1v1.cfg) | Core A1V1 | @zenaro147 (2023) |
+| [`printer-gtmax-core-a3v2.cfg`](printer-gtmax-core-a3v2.cfg) | Core A3V2 | @J-Pozenato (2023) |
 
-## Funcionalidade
+Os arquivos da A2V2 partem destas premissas (detalhes em [docs/hardware.md](docs/hardware.md)):
 
-A instalação do firmware Klipper é o upgrade que mais vale a pena, e pode ser feito sem abrir a impressora e sem trocar componentes.
+- **Drivers TMC2209, com os dois fios de uma das bobinas de cada motor trocados de posição.** Com os
+  drivers originais e a ligação original, os mesmos `dir_pin` devem funcionar. Com TMC2209 e a ligação
+  original, é preciso inverter as direções no cfg. Veja a
+  [tabela de direção dos motores](docs/hardware.md#direção-dos-motores) antes de ligar os motores.
+- **Acelerômetro ADXL345 no Raspberry Pi.** Sem ele, siga
+  [Sem acelerômetro](docs/acelerometro.md#sem-acelerômetro).
+- **Valores calibrados na impressora do autor** (PID, `z_offset`, pressure advance, input shaper): recalibre na
+  sua.
 
-O arquivo [printer-gtmax3d-core-a2v2.cfg](printer-gtmax3d-core-a2v2.cfg) neste repositório contém as informações necessárias, inclusive os pinos para detecção de filamento, sensores de fim de curso ("endstops"), configuração de geometria da impressora, modelo de LCD, etc. A direção dos motores configuradas nele respeita a direção original de fábrica. Se você trocar os controladores para os TMC2209, ou você precisa trocar a direção dos motores no printer.cfg (inclusive do extrusor) ou precisa trocar um par de fios de cada controlador. Ainda não fiz as macros de troca de filamento quando o filamento acaba no meio da impressão.
+Os arquivos da A1V1 e da A3V2 foram enviados por outras pessoas e não foram testados pelo autor.
 
-Existe uma versão do arquivo feito pelo @zenaro147 para a Core A1V1 - verifique a versão correta para a sua impressora, revise o que for necessário e copie o conteúdo para o arquivo printer.cfg do seu raspberry pi.
+> ⚠️ **Não configure o `max_power` da seção `[heater_bed]` com valor maior que 0.2.** Com 1.0, a mesa do autor
+> esquentou rápido demais; por sorte, a resistência não queimou e o vidro não quebrou. A mesa precisa
+> esquentar devagar para o calor se espalhar e minimizar deformações.
 
-* Peça para a GTMax3D uma cópia do firmware original da impressora no formato ".hex" ANTES de você tentar mexer em qualquer coisa. Esse arquivo vai ser necessário se houver algum problema para carregar o firmware.
-* Instale o [FluiddPi](https://docs.fluidd.xyz/installation/fluiddpi) em um minicomputador Raspberry PI 2B ou superior e faça as configurações como no tutorial do site.
-* Instale um controlador wifi se o seu raspberry pi não tiver um embutido (no meu caso eu já tinha um Raspberry PI 2B antigo).
-* Conecte raspberry pi pelo cabo USB à sua impressora.
-* Acesse o Fluidd pela interface de rede (http://fluiddpi.local se você não mudou) e coloque o arquivo [printer.cfg](printer.cfg) na pasta de configuração.
-* Não lembro se o Fluidd faz essa etapa sozinho, mas eu fiz manualmente o procedimento de [instalação do Klipper](https://www.klipper3d.org/Installation.html) para carregar o firmware na impressora.
-* Faça os procedimentos em [Klipper Initial Setup : Making sure things are all good before printing](https://www.youtube.com/watch?v=T-knWbh1Gg8) para testar o movimento da impressora. Tudo já deve estar ok se você não trocou nenhum componente na impressora (ou se trocou e inverteu corretamente a direção dos motores), mas é importante conferir.
-* Calibre a sua impressora. Normalmente só o "rotation_distance" já vai ser suficiente para você começar a imprimir, e o seu valor não deve ser muito diferente do que eu achei para a minha impressora.
-* ***Atenção: NÃO CONFIGURE O max_power DA SESSÃO heater_bed PARA UM VALOR MAIOR QUE 0.2*** O arquivo printer.cfg já está com o valor correto, mexa por sua conta e risco! Eu comecei a configuração com 1.0 e a temperatura da mesa subiu super rápido. Tive sorte de não queimar a resistência nem quebrar o vidro. Esse é um componente que tem que esquentar devagar, para dar tempo do calor se espalhar e minimizar deformações.
+## Documentação
 
+| Documento | Conteúdo |
+|---|---|
+| [docs/hardware.md](docs/hardware.md) | hardware original e modificado, firmware original, pinos, limites físicos, direção dos motores |
+| [docs/instalacao.md](docs/instalacao.md) | Raspberry Pi OS, Klipper, Moonraker e Fluidd; configuração, primeiro teste e calibrações |
+| [docs/firmware.md](docs/firmware.md) | compilar e gravar o Klipper na RAMPS e no Raspberry Pi |
+| [docs/acelerometro.md](docs/acelerometro.md) | ADXL345, input shaper e o problema conhecido de escala |
+| [docs/fatiador.md](docs/fatiador.md) | perfis do PrusaSlicer e como eles se integram ao cfg |
+| [docs/backup_e_migracao.md](docs/backup_e_migracao.md) | backup e troca de cartão SD, mantendo o histórico de impressões |
+| [docs/upgrades.md](docs/upgrades.md) | Klipper com Raspberry Pi, TMC2209, ventoinha Noctua, bico de 0,6 mm, ADXL345, placa Octopus |
 
-Vantagens:
-* Melhor qualidade de impressão ou maior velocidade por causa do melhor controle de temperatura e funcionalidades como avanço de pressão e "input shaping", para eliminar ondulações.
-* Controlar a impressora pela rede.
-* Configurar macros para facilitar algumas tarefas como carga e descarga de filamento, calibração de temperatura da mesa e do bico quando trocar o material, etc.
-* Acompanhamento da impressão com estimativa realista de tempo para término.
-* Alterar parâmetros de impressão enquanto ela acontece (velocidade, temperatura, extrusão, etc.).
-* Mandar trabalhos para a impressora sem precisar de cartão de memória.
-* Suporte para comandos G2 e G3 (Cura ArcWelder), que diminuem o tamanho do arquivo .gcode e fazem as curvas nos objetos ficarem mais suaves com menos "degraus". O firmware original suporta esses comandos mas a impressora fica super lenta na hora de executá-los.
-* Se você não fizer nenhuma troca de componentes da impressora (upgrades abaixo), é possível voltar a impressora para a configuração de fábrica original.
-* Tem bastante material no youtube ensinando a mexer com o Klipper.
+Outras pastas:
 
-Desvantagens:
-* Exige conhecimentos básicos de informática para instalar o fluidpi em um minicomputador raspberry pi.
-* A maioria da documentação está em inglês.
-* Se você fizer alguma confusão com a troca de direção dos motores, a sua impressora pode tentar forçar um motor para além do fim de curso dele, podendo provocar todo tipo de problemas mecânicos. Teste com cuidado, com o dedo no interruptor liga/desliga, para poder interromper a energia instantaneamente se alguma coisa der errado.
-* É bom dar uma olhada nos vídeos no youtube ensinando a instalar o klipper pela primeira vez.
-* O cabo usb tem que ficar ligado o tempo todo e você tem que arrumar um lugar para colocar o raspberry pi que controla a impressora.
-* Vários comandos de gcode, como o M300 que gera um bipe, param de funcionar pois não são suportados diretamente no Klipper. Você pode reimplementá-los como macros no arquivo printer.cfg, como o g29 que eu escrevi para nivelar a mesa tendo em vista as características da sonda.
+- [`firmware_configs/`](firmware_configs/): configurações de compilação do firmware da RAMPS e do MCU Linux.
+- [`prusaslicer/`](prusaslicer/): perfis de impressora, filamento e impressão.
 
+## Roteiro resumido
 
-## Ruído
+1. Peça à GTMax3D o firmware original da sua impressora (arquivo `.hex`) **antes de mexer em qualquer coisa**.
+   É com ele que se volta ao estado original.
+2. Siga o [docs/instalacao.md](docs/instalacao.md) na ordem: Raspberry Pi (2B ou mais novo) com Klipper,
+   Moonraker e Fluidd; cópia e ajuste do cfg (porta serial, acelerômetro, direção dos motores); gravação do
+   firmware; primeiro teste de movimento; calibrações. Se o Pi não tiver Wi-Fi embutido, use um adaptador USB.
+3. Importe os perfis do fatiador: [docs/fatiador.md](docs/fatiador.md).
 
-Esse upgrade é caro mas vale muito a pena. A impressora fica muito mais silenciosa e a qualidade da impressão melhora um pouco pois os controladores são melhores.
+## Vantagens do Klipper nesta impressora
 
-* Mais importante: trocar os controladores de motor por 4x TMC2209 (não testei os TMC2208 mas devem funcionar bem também). Se você não mexer em mais nada, é necessário inverter dois fios de cada um dos controladores para inverter a direção do movimento. Custo: 250-300 reais no Brasil. Comprei os meus na China.
-* Secundário: trocar a ventoinha da parte da frente por uma Noctua NF-A4x20 PWM 5V. Custo: ~R$130. Não acho que vale a pena comprar no exterior.
+O firmware original já é bem completo (ver [docs/hardware.md](docs/hardware.md#firmware-original)): é um
+Marlin adaptado pela GTMax3D, com nivelamento automático da mesa pela sonda, troca de filamento (`M600`),
+pausa pelo sensor de fim de filamento, ajuste de velocidade durante a impressão e estatísticas no display. O
+que o Klipper acrescenta:
 
-Vantagens:
-* Mal dá para perceber se a impressora está imprimindo ou parada. A ventoinha externa ainda faz bastante barulho mas não incomoda tanto quanto os motores.
-* Se trocar a ventoinha, melhora mais ainda. Dá até para trabalhar no mesmo ambiente em que a impressora está imprimindo.
+- Pressure advance e input shaper, que o firmware original não tem: melhor qualidade ou mais velocidade, sem
+  as ondulações.
+- Controle de temperatura muito melhor. Com o firmware original, quando a temperatura do bico baixava
+  durante a impressão (por exemplo, depois de uma primeira camada mais quente), ela caía além do alvo antes
+  de estabilizar, e às vezes a impressão falhava. Com o Klipper isso não acontece.
+- Controle pela rede, pelo navegador, sem cartão de memória.
+- Estimativa realista do tempo restante.
+- Ajuste de velocidade, temperatura e fluxo durante a impressão, também pelo navegador.
+- Arcos (G2/G3, como os do ArcWelder), que deixam o G-code menor e as curvas mais suaves. O firmware original
+  também aceita esses comandos, mas fica muito lento ao executá-los.
+- Histórico de cada impressão no navegador. O firmware original só mostra os totais no display.
+- Macros editáveis no cfg, sem recompilar o firmware.
+- Sem troca de componentes, dá para voltar ao firmware original gravando o `.hex` da GTMax3D. O autor nunca
+  fez essa volta (ver [docs/firmware.md](docs/firmware.md)).
+- Há muito material sobre o Klipper no YouTube.
 
-Desvantagens:
-* É necessário abrir a impressora, trocar componentes e mexer em alguns fios. Se você fizer este upgrade junto com a instalação do Klipper, a direção pode ser invertida no arquivo printer.cfg, sem a necessidade de trocar fios.
-* O espaço é um pouco apertado e você tem oportunidade de queimar componentes se ligar alguma coisa no lugar errado ou colocar um controlador de cabeça para baixo.
-* Risco de choque elétrico. DESLIGUE DA TOMADA antes de mexer.
+## Desvantagens
 
+- Exige conhecimentos básicos de Linux para instalar e manter o Raspberry Pi.
+- A maior parte da documentação está em inglês.
+- Uma direção de motor errada pode forçar a mecânica contra o fim de curso. Teste com cuidado, com a mão no
+  interruptor liga/desliga.
+- O cabo USB fica ligado o tempo todo, e o Raspberry Pi precisa de um lugar perto da impressora.
+- Alguns comandos do firmware original não existem no Klipper e precisam ser recriados como macros. Os cfg
+  deste repositório já trazem `G29` (nivelamento com a sonda), `M300` (bipe), `M600` (troca de filamento) e
+  `M601` (pausa). O `M300`, o `M600`, o `M601` e o `CANCEL_PRINT` do cfg foram testados só em simulação,
+  ainda não na impressora.
+- Os menus do display mudam: passam a ser os do Klipper, em inglês.
 
-## Eletrônica
+## Créditos
 
-Comprei o kit para fazer o upgrade da placa interna (uma RAMPS 1.4 com arduíno) para uma BigTreeTech Octopus mas acabei não fazendo a troca. Daria muito trabalho e avaliei que não vale a pena, pois, no meu caso, a única vantagem seria que a placa seria um pouco mais rápida, o que ajudaria em caso de projetos que exigissem impressão veloz com um gcode muito grande. Consegui fazer tudo com os componentes originais da impressora. Vou guardar a minha Octopus para um outro projeto.
-
-Se você não quiser usar o RaspberryPi com o Klipper, trocar a placa interna por uma Octopus ou outra placa mais potente pode permitir que você use uma versão do Marlin 2.0 mais recente que suporte avanço de pressão. Na minha opinião dá muito mais trabalho e não deve ficar tão bom como usar o Klipper.
+- @mirandadam: configuração e documentação da Core A2V2.
+- @zenaro147: configuração da Core A1V1 (janeiro de 2023).
+- @J-Pozenato: configuração da Core A3V2 (julho de 2023).
